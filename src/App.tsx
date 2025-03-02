@@ -11,34 +11,34 @@ type Heart = {
 type Memory = {
   date: string;
   title: string;
-  description: string;
+  image: string;
 };
 
 const memories: Memory[] = [
   {
     date: "Jan 14, 2023",
     title: "Our First Date 💕",
-    description: "The day we met and had the most amazing time together!",
+    image: "/malmo.jpeg",
   },
   {
     date: "Feb 14, 2023",
     title: "First Valentine's Day ❤️",
-    description: "Our first Valentine's together! The sweetest memories.",
+    image: "/movie.jpeg",
   },
   {
     date: "May 20, 2023",
     title: "Trip to the Beach 🏖️",
-    description: "We watched the sunset together, it was so magical.",
+    image: "/ikea.jpeg",
   },
   {
     date: "Sept 10, 2023",
     title: "Our Anniversary 🎉",
-    description: "Celebrating a beautiful year filled with love and joy.",
+    image: "/fishes.jpeg",
   },
   {
     date: "Dec 25, 2023",
     title: "Christmas Together 🎄",
-    description: "Spending the holidays with you was the best gift ever!",
+    image: "/el4.jpeg",
   },
 ];
 
@@ -49,9 +49,8 @@ function App() {
   const [showImages, setShowImages] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showNextButton, setShowNextButton] = useState(false);
-  const [openedBox, setOpenedBox] = useState<number | null>(null);
-
   const countTextRef = useRef<HTMLDivElement | null>(null);
+  const [openedMemory, setOpenedMemory] = useState<number | null>(null);
 
   useEffect(() => {
     const createHeart = () => {
@@ -136,7 +135,7 @@ function App() {
           </div>
 
           {showImages && (
-            <div className="flex flex-wrap gap-8 mt-8 relative z-10">
+            <div className="flex gap-8 mt-8 relative z-10">
               {currentImageIndex >= 1 && (
                 <img
                   src="/el1.jpeg"
@@ -180,32 +179,34 @@ function App() {
       ) : (
         <>
           <h1 className="text-4xl font-bold mb-8 relative z-10">
-            💖 Our Love Timeline 💖
+            Some of our memories 😊
           </h1>
-          <div className="relative flex items-center w-full max-w-4xl overflow-x-auto py-4">
-            <div className="absolute top-1/2 left-0 w-full h-1 bg-red-400 rounded"></div>
 
+          {/* Memory boxes */}
+          <div className="flex flex-row items-top gap-8 relative z-10 overflow-x-auto">
             {memories.map((memory, index) => (
-              <div
-                key={index}
-                className="relative flex flex-col items-center mx-8"
-              >
+              <div key={index} className="relative flex flex-col items-center">
+                {/* Clickable Box */}
                 <div
-                  className="w-24 h-24 bg-yellow-300 rounded-lg flex items-center justify-center text-lg font-bold cursor-pointer shadow-lg transition transform hover:scale-105 relative z-10"
+                  className="w-64 p-4 bg-white rounded-lg shadow-lg cursor-pointer text-center"
                   onClick={() =>
-                    setOpenedBox(openedBox === index ? null : index)
+                    setOpenedMemory(openedMemory === index ? null : index)
                   }
                 >
-                  {openedBox === index ? "💝" : "🎁"}
+                  <h2 className="text-lg font-bold">{memory.title}</h2>
+                  <span className="text-sm font-semibold mt-2">
+                    {memory.date}
+                  </span>
                 </div>
-                <span className="text-sm font-semibold mt-2">
-                  {memory.date}
-                </span>
 
-                {openedBox === index && (
-                  <div className="absolute top-32 w-48 bg-white p-4 rounded-lg shadow-md text-center">
-                    <h2 className="text-lg font-bold">{memory.title}</h2>
-                    <p className="text-sm">{memory.description}</p>
+                {/* Dropdown Style Image */}
+                {openedMemory === index && (
+                  <div className="mt-4 w-64 bg-white p-4 rounded-lg shadow-lg flex flex-col items-center">
+                    <img
+                      src={memory.image}
+                      alt={memory.title}
+                      className="w-64 h-64 object-contain rounded-md shadow-md"
+                    />
                   </div>
                 )}
               </div>
