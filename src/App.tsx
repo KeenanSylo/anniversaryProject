@@ -16,29 +16,29 @@ type Memory = {
 
 const memories: Memory[] = [
   {
-    date: "Jan 14, 2023",
-    title: "Our First Date 💕",
+    date: "Nov 24, 2023",
+    title: "Our First Date",
+    image: "/date.jpeg",
+  },
+  {
+    date: "Jan 4, 2024",
+    title: "First Malmo Trip",
     image: "/malmo.jpeg",
   },
   {
-    date: "Feb 14, 2023",
-    title: "First Valentine's Day ❤️",
-    image: "/movie.jpeg",
-  },
-  {
-    date: "May 20, 2023",
-    title: "Trip to the Beach 🏖️",
+    date: "April 28, 2024",
+    title: "Trip to Ikea",
     image: "/ikea.jpeg",
   },
   {
-    date: "Sept 10, 2023",
-    title: "Our Anniversary 🎉",
-    image: "/fishes.jpeg",
+    date: "July 30, 2024",
+    title: "Inside out 2!",
+    image: "/movie.jpeg",
   },
   {
-    date: "Dec 25, 2023",
-    title: "Christmas Together 🎄",
-    image: "/el4.jpeg",
+    date: "Jan 17, 2025",
+    title: "Copenhagen Adventure",
+    image: "/fishes.jpeg",
   },
 ];
 
@@ -51,6 +51,7 @@ function App() {
   const [showNextButton, setShowNextButton] = useState(false);
   const countTextRef = useRef<HTMLDivElement | null>(null);
   const [openedMemory, setOpenedMemory] = useState<number | null>(null);
+  const [letterOpened, setLetterOpened] = useState(false); // State for opening the letter
 
   useEffect(() => {
     const createHeart = () => {
@@ -127,10 +128,10 @@ function App() {
       ) : page === "next" ? (
         <>
           <h1 className="text-4xl font-bold mb-4 relative z-10">
-            Welcome to the Next Page!
+            How long have we been officialy together?
           </h1>
           <div className="text-2xl font-bold relative z-10" ref={countTextRef}>
-            We have been together for{" "}
+            We have been officialy together for{" "}
             <span className="text-red-500">{count}</span> days!
           </div>
 
@@ -169,14 +170,14 @@ function App() {
 
           {showNextButton && (
             <button
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-300 relative z-10 fadeInImage"
+              className="bg-red-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-300 relative z-10 fadeInImage"
               onClick={() => setPage("timeline")}
             >
               Next Page
             </button>
           )}
         </>
-      ) : (
+      ) : page === "timeline" ? (
         <>
           <h1 className="text-4xl font-bold mb-8 relative z-10">
             Some of our memories 😊
@@ -212,9 +213,63 @@ function App() {
               </div>
             ))}
           </div>
-        </>
-      )}
 
+          <button
+            className="bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 transition duration-300 relative z-10"
+            onClick={() => setPage("letter")}
+          >
+            Open the Heart
+          </button>
+        </>
+      ) : page === "letter" ? (
+        <>
+          <h1 className="text-4xl font-bold mb-8 relative z-10">
+            A Special Letter For my Baby 💌
+          </h1>
+
+          {/* Letter Content with Fade-in Animation */}
+          <div
+            className={`p-8 bg-white rounded-lg shadow-lg w-full max-w-4xl relative overflow-hidden transition-all duration-700 ${
+              letterOpened ? "opacity-100" : "opacity-0"
+            }`}
+            style={{ zIndex: 10 }} // Letter container has a higher z-index
+          >
+            <h2 className="text-2xl font-bold mb-4"> for my baby,</h2>
+            {letterOpened ? (
+              <p>
+                Happy one year anniversary my baby. I hope you like this little
+                project that I made for you. This past year has been the best
+                and funnest year I have ever had. I like all the things we do
+                together I love cooking with you, watching movies with you,
+                going to new places with you and talking to you for hours and
+                hours. Time fly by so fast when I am with you so I am happy I
+                get to spend many more years with you. I like when you make me
+                smile, when we laugh, when we joke around. When you're far away,
+                just talking to you over the phone makes me feel at ease. I'm so
+                excited we're going to Belgium together and all of my parents
+                love you because I love you so much. I will always love you, and
+                I will always make sure that you know that I love you. I will
+                always be that one person that always be there for you and hear
+                all the things you want to let out and say. In every universe
+                that Im in, I will always find you and love you the same way I
+                love you now. Be there for me okay. To many more years my cute
+                baby. Aku sayang kamu so mach.
+              </p>
+            ) : null}
+            <p className="mt-4">your baby, K, ❤️</p>
+          </div>
+
+          {/* Heart Icon at the bottom */}
+          <div
+            className="absolute bottom-0 left-1/2 transform -translate-x-1/2 mb-4 w-16 h-16 bg-red-500 rounded-full flex items-center justify-center cursor-pointer shadow-lg transition-all duration-700"
+            onClick={() => setLetterOpened(true)}
+          >
+            <i className="fa-solid fa-heart text-white text-4xl"></i>
+          </div>
+        </>
+      ) : null}
+
+      {/* Floating Hearts */}
       <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-0">
         {hearts.map((heart) => (
           <i
@@ -224,6 +279,7 @@ function App() {
               left: heart.left,
               top: heart.top,
               animation: `floatUp ${heart.duration} linear infinite`,
+              zIndex: 0, // Hearts are behind the letter
             }}
           ></i>
         ))}
@@ -235,6 +291,16 @@ function App() {
             0% { transform: translateY(0); opacity: 1; }
             100% { transform: translateY(-100vh); opacity: 0; }
           }
+
+          @keyframes moveHeart {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(0); }
+          }
+
+          .animate-heart {
+            animation: moveHeart 1s ease-in-out forwards;
+          }
+
           .fa-heart { font-size: 24px; position: absolute; }
           @keyframes fadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
           .fadeInImage { animation: fadeIn 2s ease-in forwards; }
