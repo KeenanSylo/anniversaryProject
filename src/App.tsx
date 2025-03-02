@@ -49,6 +49,7 @@ function App() {
   const [showImages, setShowImages] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showNextButton, setShowNextButton] = useState(false);
+  const [showOpenHeartButton, setShowOpenHeartButton] = useState(false); // State to control the visibility of the "Open the Heart" button
   const countTextRef = useRef<HTMLDivElement | null>(null);
   const [openedMemory, setOpenedMemory] = useState<number | null>(null);
   const [letterOpened, setLetterOpened] = useState(false); // State for opening the letter
@@ -106,6 +107,17 @@ function App() {
     }
   }, [currentImageIndex, showImages]);
 
+  // Show the "Open the Heart" button after 5 seconds when on the "timeline" page
+  useEffect(() => {
+    if (page === "timeline") {
+      const timeout = setTimeout(() => {
+        setShowOpenHeartButton(true); // Make the "Open the Heart" button visible after 5 seconds
+      }, 5000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [page]); // Only trigger when the page changes to "timeline"
+
   return (
     <main className="flex flex-col items-center gap-8 py-16 w-full h-screen bg-gradient-to-t from-pink-100 to-pink-300 overflow-hidden">
       {page === "home" ? (
@@ -128,10 +140,10 @@ function App() {
       ) : page === "next" ? (
         <>
           <h1 className="text-4xl font-bold mb-4 relative z-10">
-            How long have we been officialy together?
+            How long have we been officially together?
           </h1>
           <div className="text-2xl font-bold relative z-10" ref={countTextRef}>
-            We have been officialy together for{" "}
+            We have been officially together for{" "}
             <span className="text-red-500">{count}</span> days!
           </div>
 
@@ -170,7 +182,7 @@ function App() {
 
           {showNextButton && (
             <button
-              className="bg-red-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-300 relative z-10 fadeInImage"
+              className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition duration-300 relative z-10 fadeInImage"
               onClick={() => setPage("timeline")}
             >
               Next Page
@@ -214,12 +226,14 @@ function App() {
             ))}
           </div>
 
-          <button
-            className="bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 transition duration-300 relative z-10"
-            onClick={() => setPage("letter")}
-          >
-            Open the Heart
-          </button>
+          {showOpenHeartButton && (
+            <button
+              className="bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 transition duration-300 relative z-10"
+              onClick={() => setPage("letter")}
+            >
+              Open the Heart
+            </button>
+          )}
         </>
       ) : page === "letter" ? (
         <>
@@ -256,7 +270,7 @@ function App() {
                 baby. Aku sayang kamu so mach.
               </p>
             ) : null}
-            <p className="mt-4">your baby, K, ❤️</p>
+            <p className="mt-4">your baby, K ❤️</p>
           </div>
 
           {/* Heart Icon at the bottom */}
